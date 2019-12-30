@@ -8,9 +8,22 @@ const conn = mysql.createPool(config.db)
 
 const bodyParser = require("body-parser")
 app.use(bodyParser.urlencoded({ extended: false }))
+
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
+var privateKey  = fs.readFileSync('/path/itse.key', 'utf8');
+var certificate = fs.readFileSync('/path/itse.pem', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
+
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+
+
 app.get("/", (req, res) => {
     res.send("server is start")
 })
+
 app.get("/me", (req, res) => {
     conn.query("select text from blog", (err, data) => {
         if (err) {
@@ -49,7 +62,12 @@ app.get("/me", (req, res) => {
             })
         })
     })
-    app.listen('8901', () => {
+    // app.listen('8901', () => {
+    //     console.log("server into run http://127.0.0.1:8901");
+
+    // })
+
+    httpsServer.listen('8901',() => {
         console.log("server into run http://127.0.0.1:8901");
 
     })

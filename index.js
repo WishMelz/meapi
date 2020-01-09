@@ -1,5 +1,5 @@
 const app = require('express')();
-const config = require('./confg')
+const config = require('./config')
 app.use(require('cors')())
 
 

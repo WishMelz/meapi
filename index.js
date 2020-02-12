@@ -40,7 +40,13 @@ app.get("/me", (req, res) => {
     })
 })
     app.post("/me", (req, res) => {
-        if (req.body.msg != 'm1107') return
+        if (req.body.msg != 'm1107'){
+            res.json({
+                code: "400",
+                msg: "校验码错误！！！"
+            })
+            return
+        } 
         // console.log(req.body);
         let time = parseInt(new Date().getTime() / 100)
         // console.log(time);

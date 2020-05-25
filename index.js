@@ -72,6 +72,7 @@ app.post("/me", (req, res) => {
 app.get('/music',(req,res)=>{
     let sql = `select name,artist,url,cover from muisc`;
     conn.query(sql,(err,data)=>{
+        
         if(err){
             res.json({
                 code:"400",
@@ -82,6 +83,25 @@ app.get('/music',(req,res)=>{
         }
     })
 })
+
+app.get('/routers',(req,res)=>{
+    let sql = `select * from routers where canRouter = 0`;
+    conn.query(sql,(err,data)=>{
+        if(err){
+            res.json({
+                code:"400",
+                msg:"服务器错误"
+            })
+        }else {
+            res.json({
+                code:200,
+                msg:"获取成功",
+                data
+            })
+        }
+    })
+})
+
 // app.listen('8901', () => {
 //     console.log("server into run http://127.0.0.1:8901");
 

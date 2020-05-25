@@ -85,7 +85,7 @@ app.get('/music',(req,res)=>{
 })
 
 app.get('/routers',(req,res)=>{
-    let sql = `select * from routers where canRouter = 0`;
+    let sql = `select routerName,routerPath from routers where canRouter = 0`;
     conn.query(sql,(err,data)=>{
         if(err){
             res.json({

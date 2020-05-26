@@ -86,23 +86,20 @@ app.post("/me", (req, res) => {
 })
 
 app.get('/music', (req, res) => {
-    let sql = `select name,artist,url,cover from muisc`;
-    conn.query(sql, (err, data) => {
-
+    redisPool.get('music',(err,data)=>{
         if (err) {
             res.json({
                 code: "400",
                 msg: "服务器错误"
             })
         } else {
-            res.json(data)
+            res.json(JSON.parse(data))
         }
     })
 })
 
 app.get('/routers', (req, res) => {
-    let sql = `select routerName,routerPath from routers where canRouter = 0`;
-    conn.query(sql, (err, data) => {
+    redisPool.get('rouers',(err,data)=>{
         if (err) {
             res.json({
                 code: "400",
@@ -112,7 +109,7 @@ app.get('/routers', (req, res) => {
             res.json({
                 code: 200,
                 msg: "获取成功",
-                data
+                data:JSON.parse(data)
             })
         }
     })

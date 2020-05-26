@@ -30,7 +30,7 @@ conn.query(defalutSql, (err, data) => {
         // 0 music, 1 blog, 2 routers;
         redisPool.set('music', JSON.stringify(data[0]))
         redisPool.set('blog', JSON.stringify(data[1]))
-        redisPool.set('rouers', JSON.stringify(data[2]))
+        redisPool.set('routers', JSON.stringify(data[2]))
     }
 })
 
@@ -99,7 +99,7 @@ app.get('/music', (req, res) => {
 })
 
 app.get('/routers', (req, res) => {
-    redisPool.get('rouers',(err,data)=>{
+    redisPool.get('routers',(err,data)=>{
         if (err) {
             res.json({
                 code: "400",

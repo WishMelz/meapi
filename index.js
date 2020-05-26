@@ -41,7 +41,7 @@ app.get("/", (req, res) => {
 })
 
 app.get("/me", (req, res) => {
-    redisPool.get('music',(err,data)=>{
+    redisPool.get('blog',(err,data)=>{
         if (err) {
             res.json({
                 code: '400',

@@ -35,6 +35,26 @@ conn.query(defalutSql, (err, data) => {
 })
 
 
+app.get('/reloadRedis',(req,res)=>{
+    conn.query(defalutSql, (err, data) => {
+        if (err) {
+            console.log('defalut_Redis' + err.message);
+            res.json({
+                code:400,
+                msg:"数据库错误！！"
+            })
+        } else {
+            // 0 music, 1 blog, 2 routers;
+            redisPool.set('music', JSON.stringify(data[0]))
+            redisPool.set('blog', JSON.stringify(data[1]))
+            redisPool.set('routers', JSON.stringify(data[2]))
+            res.json({
+                code:200,
+                msg:"更新成功"
+            })
+        }
+    })
+})
 
 app.get("/", (req, res) => {
     res.send("server is start")

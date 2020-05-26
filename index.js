@@ -20,23 +20,39 @@ var httpServer = http.createServer(app);
 var httpsServer = https.createServer(credentials, app);
 
 
+
+var redisPool = require('redis-connection-pool')('myRedisPool', config.redis);
+let defalutSql = `select name,artist,url,cover from muisc;select text from blog;select routerName,routerPath from routers where canRouter = 0;`
+conn.query(defalutSql, (err, data) => {
+    if (err) {
+        console.log('defalut_Redis' + err.message);
+    } else {
+        // 0 music, 1 blog, 2 routers;
+        redisPool.set('music', JSON.stringify(data[0]))
+        redisPool.set('blog', JSON.stringify(data[1]))
+        redisPool.set('rouers', JSON.stringify(data[2]))
+    }
+})
+
+
+
 app.get("/", (req, res) => {
     res.send("server is start")
 })
 
 app.get("/me", (req, res) => {
-    conn.query("select text from blog", (err, data) => {
+    redisPool.get('music',(err,data)=>{
         if (err) {
             res.json({
                 code: '400',
                 msg: err
             })
+            return;
         }
         res.json({
             code: '200',
-            msg: data
+            msg: JSON.parse(data)
         })
-
     })
 })
 app.post("/me", (req, res) => {
@@ -69,33 +85,33 @@ app.post("/me", (req, res) => {
     })
 })
 
-app.get('/music',(req,res)=>{
+app.get('/music', (req, res) => {
     let sql = `select name,artist,url,cover from muisc`;
-    conn.query(sql,(err,data)=>{
-        
-        if(err){
+    conn.query(sql, (err, data) => {
+
+        if (err) {
             res.json({
-                code:"400",
-                msg:"服务器错误"
+                code: "400",
+                msg: "服务器错误"
             })
-        }else {
+        } else {
             res.json(data)
         }
     })
 })
 
-app.get('/routers',(req,res)=>{
+app.get('/routers', (req, res) => {
     let sql = `select routerName,routerPath from routers where canRouter = 0`;
-    conn.query(sql,(err,data)=>{
-        if(err){
+    conn.query(sql, (err, data) => {
+        if (err) {
             res.json({
-                code:"400",
-                msg:"服务器错误"
+                code: "400",
+                msg: "服务器错误"
             })
-        }else {
+        } else {
             res.json({
-                code:200,
-                msg:"获取成功",
+                code: 200,
+                msg: "获取成功",
                 data
             })
         }

@@ -26,7 +26,7 @@ let defalutSql = `
     select name,artist,url,cover from muisc;
     select text from blog;
     select routerName,routerPath from routers where canRouter = 0;
-    select text from lickdog;
+    select text,author from lickdog;
     `
 conn.query(defalutSql, (err, data) => {
     if (err) {

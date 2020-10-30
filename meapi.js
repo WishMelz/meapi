@@ -27,6 +27,7 @@ let defalutSql = `
     select text from blog;
     select routerName,routerPath from routers where canRouter = 0;
     select text,author from lickdog;
+    select routerName,routerPath,icon from itsseRouters where canRouter = 0;
     `
 conn.query(defalutSql, (err, data) => {
     if (err) {
@@ -37,6 +38,7 @@ conn.query(defalutSql, (err, data) => {
         redisPool.set('blog', JSON.stringify(data[1]))
         redisPool.set('routers', JSON.stringify(data[2]))
         redisPool.set('tg', JSON.stringify(data[3]))
+        redisPool.set('itsseRouter', JSON.stringify(data[4]))
     }
 })
 
@@ -55,7 +57,7 @@ app.get('/reloadRedis',(req,res)=>{
             redisPool.set('blog', JSON.stringify(data[1]))
             redisPool.set('routers', JSON.stringify(data[2]))
             redisPool.set('tg', JSON.stringify(data[3]))
-
+            redisPool.set('itsseRouter', JSON.stringify(data[4]))
             res.json({
                 code:200,
                 msg:"更新成功"
@@ -145,6 +147,23 @@ app.get('/routers', (req, res) => {
 
 app.get('/tg', (req, res) => {
     redisPool.get('tg',(err,data)=>{
+        if (err) {
+            res.json({
+                code: "400",
+                msg: "服务器错误"
+            })
+        } else {
+            res.json({
+                code: 200,
+                msg: "获取成功",
+                data:JSON.parse(data)
+            })
+        }
+    })
+})
+
+app.get('/itsseRouters', (req, res) => {
+    redisPool.get('itsseRouter',(err,data)=>{
         if (err) {
             res.json({
                 code: "400",
